@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "DB: subir MySQL (Docker)", "type": "shell", "command": "pnpm db:up", "problemMatcher": [] },
+    { "label": "Dev: api + web + admin", "type": "shell", "command": "pnpm dev", "isBackground": true, "problemMatcher": [] },
+    { "label": "Qualidade: typecheck", "type": "shell", "command": "pnpm typecheck", "group": "test", "problemMatcher": ["$tsc"] },
+    { "label": "Qualidade: lint", "type": "shell", "command": "pnpm lint", "group": "test", "problemMatcher": [] },
+    { "label": "Qualidade: test", "type": "shell", "command": "pnpm test", "group": "test", "problemMatcher": [] }
+  ]
+}
