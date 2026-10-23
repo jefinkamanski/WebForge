@@ -8,11 +8,12 @@
     "pnpm": ">=10"
   },
   "scripts": {
-    "dev": "pnpm -r --parallel dev",
+    "dev": "pnpm build:shared && pnpm -r --parallel dev",
     "build": "pnpm -r build",
+    "build:shared": "pnpm --filter @site/shared build",
     "lint": "eslint .",
-    "typecheck": "pnpm -r --if-present typecheck",
-    "test": "pnpm -r --if-present test",
+    "typecheck": "pnpm build:shared && pnpm -r --if-present typecheck",
+    "test": "pnpm build:shared && pnpm -r --if-present test",
     "format": "prettier --write .",
     "db:up": "docker compose up -d db",
     "db:down": "docker compose down"

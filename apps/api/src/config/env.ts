@@ -7,6 +7,8 @@ const port = z.coerce.number().int().min(1).max(65535);
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: port.default(3001),
+  // Nº de proxies reversos à frente da API (hospedagem compartilhada costuma ter 1)
+  TRUST_PROXY: z.coerce.number().int().min(0).max(5).default(0),
   DB_HOST: z.string().min(1),
   DB_PORT: port.default(3306),
   DB_NAME: z.string().min(1),
@@ -23,6 +25,10 @@ const envSchema = z.object({
         .filter(Boolean),
     )
     .pipe(z.array(z.url()).min(1)),
+  JWT_SECRET: z.string().min(32),
+  COOKIE_DOMAIN: z.string().min(1).default('localhost'),
+  ADMIN_EMAIL: z.string().trim().toLowerCase().pipe(z.email()),
+  ADMIN_PASSWORD: z.string().min(8),
 });
 
 export type Env = z.infer<typeof envSchema>;

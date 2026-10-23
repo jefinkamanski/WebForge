@@ -7,6 +7,9 @@ const validEnv = {
   DB_USER: 'site_user',
   DB_PASSWORD: 'secret',
   CORS_ORIGINS: 'http://localhost:3000, http://localhost:5173',
+  JWT_SECRET: 'x'.repeat(32),
+  ADMIN_EMAIL: ' Admin@Exemplo.com ',
+  ADMIN_PASSWORD: 'senha-inicial',
 };
 
 describe('parseEnv', () => {
@@ -16,6 +19,9 @@ describe('parseEnv', () => {
     expect(env.PORT).toBe(3001);
     expect(env.DB_PORT).toBe(3306);
     expect(env.DB_POOL_LIMIT).toBe(5);
+    expect(env.TRUST_PROXY).toBe(0);
+    expect(env.COOKIE_DOMAIN).toBe('localhost');
+    expect(env.ADMIN_EMAIL).toBe('admin@exemplo.com');
     expect(env.CORS_ORIGINS).toEqual(['http://localhost:3000', 'http://localhost:5173']);
   });
 
@@ -25,5 +31,9 @@ describe('parseEnv', () => {
 
   it('rejects a pool limit above 10', () => {
     expect(() => parseEnv({ ...validEnv, DB_POOL_LIMIT: '11' })).toThrow(/DB_POOL_LIMIT/);
+  });
+
+  it('rejects a short JWT secret', () => {
+    expect(() => parseEnv({ ...validEnv, JWT_SECRET: 'curto' })).toThrow(/JWT_SECRET/);
   });
 });
