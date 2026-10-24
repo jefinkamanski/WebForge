@@ -69,6 +69,16 @@ Garantias: primeira execução cria tudo; as seguintes só aplicam novidades; **
 - Imagens: validação de tipo real e tamanho, conversão para WebP em várias larguras (`sharp`), `alt` obrigatório.
 - Vídeo: sem transcodificação no servidor; aceita MP4 (H.264) e WebM já otimizados, mais poster. Ver `docs/MIDIA.md`.
 - Armazenamento por `StorageProvider` (disco em `UPLOAD_DIR` ou S3-compatível). Exclusão remove variantes e é bloqueada se a mídia estiver em uso.
+- Os arquivos são servidos pela API em `/uploads/<id>/<arquivo>` (nomes gerados pelo servidor, cache imutável, `Cross-Origin-Resource-Policy: cross-origin`). Imagens: `/uploads/<id>/<largura>.webp`; vídeo: `/uploads/<id>/video.mp4|webm`.
+- Rotas (todas exigem login): `POST /media` (multipart, campos `file` e `alt`), `GET /media` (paginado, `kind`), `GET /media/limits`, `GET|PATCH|DELETE /media/:id`, `GET /media/:id/usage`.
+
+## 7.1 Seções e revalidação
+- `GET /sections/:key` é público (o Next.js lê no servidor); `PUT /sections/:key` exige login e valida com o schema do `sectionRegistry`, incluindo a existência e o tipo (imagem ou vídeo) das mídias referenciadas.
+- Conteúdo salvo fora do schema atual volta ao padrão no `GET`, em vez de quebrar o site.
+- Após salvar, a API chama `POST {WEB_URL}/api/revalidate` (header `x-revalidate-secret`, corpo `{ "tags": ["section:<chave>"] }`). Falhas são só registradas em log. A rota no Next.js é implementada na fase do site público.
+
+## 7.2 Proteção contra CSRF
+Além de `SameSite=Lax`, escritas (POST/PUT/PATCH/DELETE) com cabeçalho `Origin` fora de `CORS_ORIGINS` são rejeitadas com 403.
 
 ## 8. SEO e visibilidade para LLMs
 - Conteúdo no HTML inicial; `generateMetadata`; canonical; Open Graph; um `h1` por página.

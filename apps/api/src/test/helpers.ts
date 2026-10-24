@@ -1,8 +1,11 @@
 import { config } from 'dotenv';
 import type { Express } from 'express';
 import type { Connection } from 'mysql2/promise';
+import { randomUUID } from 'node:crypto';
+import { rm } from 'node:fs/promises';
 import type { Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { parseEnv, type Env } from '../config/env.js';
 import { bootstrapDatabase } from '../db/bootstrap.js';
@@ -13,8 +16,9 @@ export const TEST_ADMIN_PASSWORD = 'senha-inicial-123';
 // Custo mínimo do bcrypt: só acelera os testes
 export const TEST_BCRYPT_COST = 4;
 
-// Usa as credenciais do .env da raiz, mas SEMPRE no banco "<DB_NAME>_test"
-export function loadTestEnv(): Env {
+// Usa as credenciais do .env da raiz, mas SEMPRE no banco "<DB_NAME>_test", com uploads
+// numa pasta temporária e sem revalidação (nada de chamar o site real durante os testes)
+export function loadTestEnv(overrides: Record<string, string | undefined> = {}): Env {
   config({ path: path.resolve(import.meta.dirname, '../../../../.env'), quiet: true });
   const baseName = process.env['DB_NAME'] ?? '';
   const dbName = baseName.endsWith('_test') ? baseName : `${baseName}_test`;
@@ -26,7 +30,44 @@ export function loadTestEnv(): Env {
     DB_POOL_LIMIT: '2',
     ADMIN_EMAIL: TEST_ADMIN_EMAIL,
     ADMIN_PASSWORD: TEST_ADMIN_PASSWORD,
+    UPLOAD_DIR: path.join(tmpdir(), 'site-platform-tests', randomUUID()),
+    UPLOAD_MAX_IMAGE_MB: '8',
+    UPLOAD_MAX_VIDEO_MB: '25',
+    WEB_URL: undefined,
+    REVALIDATE_SECRET: undefined,
+    ...overrides,
   });
+}
+
+// Remove a pasta de uploads criada por loadTestEnv (recusa qualquer outro caminho)
+export async function removeTestUploads(env: Env): Promise<void> {
+  if (!env.UPLOAD_DIR.startsWith(path.join(tmpdir(), 'site-platform-tests'))) {
+    throw new Error(`Recusado: "${env.UPLOAD_DIR}" não é uma pasta de uploads de teste.`);
+  }
+  await rm(env.UPLOAD_DIR, { recursive: true, force: true });
+}
+
+export const TEST_ADMIN_NEW_PASSWORD = 'senha-de-testes-123';
+
+// Entra como admin e conclui a troca de senha obrigatória; devolve o cookie já liberado
+export async function signInAdmin(baseUrl: string): Promise<string> {
+  const send = (route: string, body: unknown, cookie = '') =>
+    fetch(`${baseUrl}${route}`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', ...(cookie && { cookie }) },
+      body: JSON.stringify(body),
+    });
+
+  const login = await send('/auth/login', {
+    email: TEST_ADMIN_EMAIL,
+    password: TEST_ADMIN_PASSWORD,
+  });
+  const changed = await send(
+    '/auth/change-password',
+    { currentPassword: TEST_ADMIN_PASSWORD, newPassword: TEST_ADMIN_NEW_PASSWORD },
+    cookieFrom(login),
+  );
+  return cookieFrom(changed);
 }
 
 // Apaga todas as tabelas do banco de teste. Recusa rodar em qualquer outro banco.
@@ -89,6 +130,6 @@ export interface ApiBody {
   error?: { code: string; fields?: Record<string, string[]> };
 }
 
-export async function readBody(response: Response): Promise<ApiBody> {
-  return (await response.json()) as ApiBody;
+export async function readBody<T = ApiBody>(response: Response): Promise<T> {
+  return (await response.json()) as T;
 }

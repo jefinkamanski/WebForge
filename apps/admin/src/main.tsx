@@ -1,7 +1,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
+import { RouterProvider } from 'react-router/dom';
+import { z } from 'zod';
+import pt from 'zod/v4/locales/pt.js';
+import { router } from './routes.tsx';
 import './index.css';
+
+// Mensagens de validação dos schemas compartilhados em português (só o idioma usado no bundle)
+z.config(pt());
 
 const root = document.getElementById('root');
 if (!root) {
@@ -10,6 +16,6 @@ if (!root) {
 
 createRoot(root).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>,
 );

@@ -34,7 +34,13 @@ export function createErrorHandler(isProduction: boolean): ErrorRequestHandler {
     }
 
     if (error instanceof HttpError) {
-      res.status(error.status).json({ error: { code: error.code, message: error.message } });
+      res.status(error.status).json({
+        error: {
+          code: error.code,
+          message: error.message,
+          ...(error.details !== undefined && { details: error.details }),
+        },
+      });
       return;
     }
 

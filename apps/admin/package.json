@@ -10,8 +10,12 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
+    "@site/shared": "workspace:*",
+    "@site/ui": "workspace:*",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-router": "^8.5.0",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
