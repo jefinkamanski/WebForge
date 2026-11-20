@@ -1,0 +1,179 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import '@fontsource-variable/dm-sans';
+
+@custom-variant dark (&:is(.dark *));
+
+/* Cores do painel. Valores e regras de uso em docs/DESIGN-ADMIN.md */
+:root {
+  --radius: 10px;
+  --background: #ffffff;
+  --foreground: #1c2536;
+  --card: #ffffff;
+  --card-foreground: #1c2536;
+  --popover: #ffffff;
+  --popover-foreground: #1c2536;
+  --primary: #3a66e8;
+  --primary-foreground: #ffffff;
+  --secondary: #edf2fe;
+  --secondary-foreground: #2f55c9;
+  --muted: #f4f7fb;
+  --muted-foreground: #5a6a85;
+  --accent: #edf2fe;
+  --accent-foreground: #2f55c9;
+  --destructive: #dc2626;
+  --border: #dfe5ef;
+  --input: #8591a6;
+  --ring: #3a66e8;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #2a3547;
+  --sidebar-primary: #3a66e8;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #edf2fe;
+  --sidebar-accent-foreground: #2f55c9;
+  --sidebar-border: #dfe5ef;
+  --sidebar-ring: #3a66e8;
+
+  /* Status: destaque (ícones, fundos a 12%) e texto */
+  --success: #13deb9;
+  --success-foreground: #0b7d68;
+  --warning: #f6b51e;
+  --warning-foreground: #8a5a00;
+  --error: #ef4444;
+  --error-foreground: #b91c1c;
+  --info: #8754ec;
+  --info-foreground: #6d3fd6;
+  --highlight: #49beff;
+  --highlight-foreground: #0b6fa8;
+}
+
+.dark {
+  --background: #1c2536;
+  --foreground: #f1f5f9;
+  --card: #1c2536;
+  --card-foreground: #f1f5f9;
+  --popover: #2a3851;
+  --popover-foreground: #f1f5f9;
+  --primary: #7da0ff;
+  --primary-foreground: #0f1a33;
+  --secondary: #2a3851;
+  --secondary-foreground: #c7d5ff;
+  --muted: #2a3851;
+  --muted-foreground: #94a5c2;
+  --accent: #2a3851;
+  --accent-foreground: #c7d5ff;
+  --destructive: #f87171;
+  --border: #333f55;
+  --input: #6b7a96;
+  --ring: #7da0ff;
+  --sidebar: #1c2536;
+  --sidebar-foreground: #94a5c2;
+  --sidebar-primary: #7da0ff;
+  --sidebar-primary-foreground: #0f1a33;
+  --sidebar-accent: #2a3851;
+  --sidebar-accent-foreground: #c7d5ff;
+  --sidebar-border: #333f55;
+  --sidebar-ring: #7da0ff;
+
+  --success-foreground: #13deb9;
+  --warning-foreground: #f6b51e;
+  --error-foreground: #f87171;
+  --info-foreground: #b597ff;
+  --highlight-foreground: #49beff;
+}
+
+@theme inline {
+  --font-sans: 'DM Sans Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-error: var(--error);
+  --color-error-foreground: var(--error-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans text-sm antialiased;
+  }
+}
+
+/* Texto dos posts no editor (o site tem estilos próprios, com os tokens do tema) */
+@layer components {
+  .rich-text {
+    @apply text-foreground text-base leading-7;
+  }
+  .rich-text > * + * {
+    @apply mt-4;
+  }
+  .rich-text h2 {
+    @apply mt-8 text-2xl font-semibold;
+  }
+  .rich-text h3 {
+    @apply mt-6 text-xl font-semibold;
+  }
+  .rich-text ul {
+    @apply list-disc pl-6;
+  }
+  .rich-text ol {
+    @apply list-decimal pl-6;
+  }
+  .rich-text li > * + * {
+    @apply mt-2;
+  }
+  .rich-text blockquote {
+    @apply border-border text-muted-foreground border-l-4 pl-4 italic;
+  }
+  .rich-text a {
+    @apply text-primary font-medium underline;
+  }
+  .rich-text hr {
+    @apply border-border;
+  }
+  .rich-text img {
+    @apply h-auto max-w-full rounded-md;
+  }
+  .rich-text img.ProseMirror-selectednode {
+    @apply ring-primary ring-2;
+  }
+}

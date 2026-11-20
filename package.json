@@ -1,0 +1,44 @@
+{
+  "name": "webforge",
+  "version": "0.6.0",
+  "private": true,
+  "description": "Plataforma open source para criar sites institucionais com painel administrativo.",
+  "license": "MIT",
+  "author": "JKDev",
+  "type": "module",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.14.0",
+      "onFail": "download"
+    }
+  },
+  "packageManager": "pnpm@12.14.0",
+  "scripts": {
+    "dev": "pnpm build:shared && pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "build:shared": "pnpm --filter @webforge/shared build",
+    "lint": "eslint .",
+    "typecheck": "pnpm build:shared && pnpm -r --if-present typecheck",
+    "test": "pnpm build:shared && pnpm -r --if-present test",
+    "format": "prettier --write .",
+    "secrets": "node scripts/gerar-segredos.mjs",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9",
+    "eslint": "^9",
+    "eslint-config-next": "^16.4.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.72.0"
+  }
+}

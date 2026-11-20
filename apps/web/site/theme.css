@@ -1,0 +1,21 @@
+/* CLIENTE: identidade visual deste site (tokens do Tailwind v4).
+   Troque as cores e fontes aqui; os componentes usam só estes tokens
+   (ex.: bg-brand-600, text-ink, border-line). */
+@theme {
+  /* Cor da marca: botões, links e fundo do destaque */
+  --color-brand-50: #eef2ff;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-900: #1e1b4b;
+
+  /* Texto */
+  --color-ink: #0f172a;
+  --color-ink-muted: #475569;
+
+  /* Fundos e bordas */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-line: #e2e8f0;
+
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+}

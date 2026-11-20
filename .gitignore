@@ -1,0 +1,24 @@
+node_modules/
+dist/
+build/
+.next/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+*.log
+.DS_Store
+
+# Ambiente e segredos
+.env
+.env.*
+!.env.example
+
+# Uploads (conteúdo do cliente nunca vai para o git)
+uploads/*
+!uploads/.gitkeep
+
+# VS Code: versionar só as configs compartilhadas
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
